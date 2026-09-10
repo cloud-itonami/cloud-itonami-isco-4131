@@ -61,17 +61,17 @@ human-in-the-loop interrupt/resume via checkpointing.
                                            +-> :hold               (:hard? true)
 ```
 
-- `src/typing_transcription/store.cljc` — `Store` protocol +
+- `src/typing_transcription/store.kotoba` — `Store` protocol +
   `MemStore`: registered batches, committed records, an append-only
   audit ledger.
-- `src/typing_transcription/advisor.cljc` — `Advisor` protocol;
+- `src/typing_transcription/advisor.kotoba` — `Advisor` protocol;
   `mock-advisor` (deterministic, default) proposes a processing
   operation from a request; `llm-advisor` wraps a
   `langchain.model/ChatModel` — either way the advisor only ever
   produces a `:propose`-effect proposal, never a committed record, and
   LLM parse failures always yield `confidence 0.0` (forces escalation,
   never fabricated confidence).
-- `src/typing_transcription/governor.cljc` —
+- `src/typing_transcription/governor.kotoba` —
   `TypingTranscriptionGovernor/check`: a pure function, wired as its
   own `:govern` node. Hard invariants (unregistered batch, a proposal
   whose `:effect` isn't `:propose`) always route to `:hold`. Escalation
@@ -82,7 +82,7 @@ human-in-the-loop interrupt/resume via checkpointing.
   (`actor/approve!`), matching the README's robotics-premise statement
   that handling confidential or regulated source documents always
   requires human sign-off.
-- `src/typing_transcription/actor.cljc` — `build-graph`,
+- `src/typing_transcription/actor.kotoba` — `build-graph`,
   `run-request!`, `approve!`: the `langgraph.graph/state-graph` wiring
   itself.
 

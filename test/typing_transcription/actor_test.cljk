@@ -1,5 +1,5 @@
 (ns typing-transcription.actor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [typing-transcription.actor :as actor]
             [typing-transcription.store :as store]))
 

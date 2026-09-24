@@ -1,0 +1,31 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a document-scanning robot performs page scanning
+;; and physical filing of source materials (ISCO 4131). Its physical work is
+;; placing bound source volumes onto the book-scanner cradle, and carrying
+;; boxes of source material between the archive and the scanning station.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-4131"
+ :cases
+ [{:id :bound-volume-to-scanner-cradle
+   :kind :manipulator
+   :procedure "arm lifts a bound source volume from the shelf down onto the book-scanner cradle"
+   :params {:l1-m 0.45 :l2-m 0.40 :m1-kg 3.5 :m2-kg 2.5
+            :from [0.25 0.65] :to [0.60 0.10] :duration-s 2.5 :steps 500}
+   :sweep {:param :payload-kg :values [0.5 1.0 2.0 3.5 6.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg class)"}
+   :boundary {:lo 0.1 :hi 20.0}}
+  {:id :source-box-to-scanning-station
+   :kind :transport
+   :procedure "robot carries an archive box of source material from the archive to the scanning station"
+   :params {:mass-kg 45.0 :payload-kg 15.0 :v-max-mps 1.0 :a-max-mps2 0.5
+            :brake-decel-mps2 0.8 :drive-force-n 90.0 :crr 0.02
+            :cog-height-m 0.55 :support-half-length-m 0.25}
+   :sweep {:param :distance-m :values [20.0 40.0 80.0 120.0 200.0]}
+   :quantity :cycle-time-s
+   :limit {:max 120.0 :basis "estimate: the next box must arrive before the scanner finishes the current one (about 2 minutes of short material)"}
+   :boundary {:lo 5.0 :hi 600.0}}]}
